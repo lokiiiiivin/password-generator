@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Password Generator</title>
+
+    <style>
+    body {
+        font-family: Arial;
+        background: linear-gradient(135deg, #141e30, #243b55);
+        color: white;
+        text-align: center;
+        padding-top: 80px;
+        margin: 0;
+    }
+
+    .box {
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        padding: 30px;
+        border-radius: 12px;
+        display: inline-block;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+        margin-bottom: 20px;
+    }
+
+    button {
+        padding: 12px 20px;
+        background: #00c6ff;
+        border: none;
+        color: white;
+        font-size: 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    button:hover {
+        background: #0072ff;
+    }
+
+    input, select {
+        padding: 8px;
+        margin: 6px 0;
+        width: 100%;
+        border-radius: 5px;
+        border: none;
+    }
+
+    label {
+        display: block;
+        margin: 5px 0;
+    }
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+    <h1>Password Generator</h1>
+
+    <form action="{% url 'password' %}">
+    <label>Password Length:</label>
+    <select name="length">
+        <option value="8">8</option>
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+    </select>
+
+    <br><br>
+
+    <label>
+        <input type="checkbox" name="uppercase"> Uppercase Letters
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="numbers"> Numbers
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="symbols"> Symbols
+    </label>
+
+    <br><br>
+
+    <button type="submit">Generate Password</button>
+</form>
+
+
+    {% if password %}
+        <h2>Your Password:</h2>
+
+        <input type="text" value="{{ password }}" id="pwd" readonly>
+        <br><br>
+
+        <button onclick="copyPwd()">Copy Password</button>
+
+        <h3 id="strength"></h3>
+
+        <script>
+            function copyPwd() {
+                var copyText = document.getElementById("pwd");
+                copyText.select();
+                document.execCommand("copy");
+                alert("Password copied!");
+            }
+
+            function checkStrength(password) {
+                let strength = "Weak";
+                if (password.length >= 12) strength = "Medium";
+                if (password.length >= 16) strength = "Strong";
+                return strength;
+            }
+
+            document.getElementById("strength").innerText =
+                "Strength: " + checkStrength("{{ password }}");
+        </script>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
